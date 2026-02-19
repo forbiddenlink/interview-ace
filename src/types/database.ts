@@ -273,3 +273,67 @@ export interface SessionWithResponses extends Session {
 export interface SkillProgress extends Skill {
   user_progress: UserSkill | null;
 }
+
+// Alias for Response to avoid conflict with global Fetch API Response
+export type QuestionResponse = Response;
+
+// Supabase Database type placeholder
+// In production, generate with: npx supabase gen types typescript
+export interface Database {
+  public: {
+    Tables: {
+      profiles: {
+        Row: Profile;
+        Insert: Partial<Profile> & { id: string };
+        Update: Partial<Profile>;
+      };
+      questions: {
+        Row: Question;
+        Insert: Partial<Question>;
+        Update: Partial<Question>;
+      };
+      responses: {
+        Row: QuestionResponse;
+        Insert: Partial<QuestionResponse> & { user_id: string; question_id: string };
+        Update: Partial<QuestionResponse>;
+      };
+      user_progress: {
+        Row: UserSkill;
+        Insert: Partial<UserSkill> & { user_id: string; skill_id: string };
+        Update: Partial<UserSkill>;
+      };
+      skills: {
+        Row: Skill;
+        Insert: Partial<Skill>;
+        Update: Partial<Skill>;
+      };
+      domains: {
+        Row: Domain;
+        Insert: Partial<Domain>;
+        Update: Partial<Domain>;
+      };
+      sessions: {
+        Row: Session;
+        Insert: Partial<Session> & { user_id: string };
+        Update: Partial<Session>;
+      };
+      stories: {
+        Row: Story;
+        Insert: Partial<Story> & { user_id: string };
+        Update: Partial<Story>;
+      };
+      achievements: {
+        Row: Achievement;
+        Insert: Partial<Achievement>;
+        Update: Partial<Achievement>;
+      };
+      user_achievements: {
+        Row: UserAchievement;
+        Insert: Partial<UserAchievement> & { user_id: string; achievement_id: string };
+        Update: Partial<UserAchievement>;
+      };
+    };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+  };
+}

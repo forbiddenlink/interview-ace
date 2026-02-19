@@ -55,3 +55,7 @@ next-env.d.ts
 
 # Local thoughts/notes
 thoughts/
+
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
