@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { saveResponse, getUserResponses } from '@/lib/db/progress';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { validateSaveResponseRequest } from '@/lib/utils/validation';
 
 export async function GET(request: NextRequest) {
   try {
@@ -69,9 +70,17 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    
+    const validationResult = validateSaveResponseRequest(body);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { error: validationResult.error },
+        { status: 400 }
+      );
+    }
+
     const responseData = {
-      ...body,
+      ...validationResult.data,
       user_id: user.id,
     };
 

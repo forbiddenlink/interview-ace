@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getQuestions, createQuestion } from '@/lib/db/questions';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { validateCreateQuestionRequest } from '@/lib/utils/validation';
 
 export async function GET(request: NextRequest) {
   try {
@@ -52,7 +53,16 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const question = await createQuestion(body);
+    const validationResult = validateCreateQuestionRequest(body);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { error: validationResult.error },
+        { status: 400 }
+      );
+    }
+
+    const question = await createQuestion(validationResult.data);
 
     return NextResponse.json({ question }, { status: 201 });
   } catch (error) {

@@ -48,9 +48,18 @@ export async function getQuestions(filters?: {
   }
 
   if (filters?.search) {
-    query = query.or(
-      `title.ilike.%${filters.search}%,prompt.ilike.%${filters.search}%,topic_tags.cs.{${filters.search}}`
-    );
+    // Sanitize search input to prevent injection
+    const sanitizedSearch = filters.search
+      .replace(/[%_]/g, '\\$&') // Escape SQL wildcards
+      .replace(/[{}(),]/g, '') // Remove special characters
+      .trim()
+      .substring(0, 100); // Limit length
+
+    if (sanitizedSearch.length > 0) {
+      query = query.or(
+        `title.ilike.%${sanitizedSearch}%,prompt.ilike.%${sanitizedSearch}%`
+      );
+    }
   }
 
   const { data, error } = await query.order('created_at', { ascending: false });

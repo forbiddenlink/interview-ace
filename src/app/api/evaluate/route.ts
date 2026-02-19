@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import OpenAI from 'openai';
+import { validateEvaluateRequest } from '@/lib/utils/validation';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -32,7 +33,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { questionId, response, rubric, type } = await request.json();
+    const body = await request.json();
+    const validationResult = validateEvaluateRequest(body);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { error: validationResult.error },
+        { status: 400 }
+      );
+    }
+
+    const { questionId, response, rubric, type } = validationResult.data;
 
     // Fetch the question
     const { data: question } = await supabase

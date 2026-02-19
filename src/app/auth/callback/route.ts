@@ -3,10 +3,26 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// Allowed redirect paths to prevent open redirect attacks
+const ALLOWED_REDIRECT_PATHS = ['/practice', '/dashboard', '/interview', '/settings'];
+
+function isValidRedirectPath(path: string): boolean {
+  // Must start with / and be a relative path (no protocol or domain)
+  if (!path.startsWith('/') || path.startsWith('//')) {
+    return false;
+  }
+  // Check against whitelist of allowed paths
+  return ALLOWED_REDIRECT_PATHS.some(allowed =>
+    path === allowed || path.startsWith(`${allowed}/`)
+  );
+}
+
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
-  const next = requestUrl.searchParams.get('next') ?? '/practice';
+  const nextParam = requestUrl.searchParams.get('next') ?? '/practice';
+  // Validate redirect path to prevent open redirect attacks
+  const next = isValidRedirectPath(nextParam) ? nextParam : '/practice';
 
   if (code) {
     const cookieStore = await cookies();
