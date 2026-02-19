@@ -38,6 +38,7 @@ vi.mock('openai', () => ({
 
 // Import after mocks
 import { POST } from '../route';
+import { _resetRateLimitStore } from '@/lib/utils/rate-limit';
 
 describe('POST /api/evaluate', () => {
   const validBody = {
@@ -64,6 +65,7 @@ describe('POST /api/evaluate', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    _resetRateLimitStore();
   });
 
   function setupAuthenticatedUser() {

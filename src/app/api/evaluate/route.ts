@@ -3,6 +3,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import OpenAI from 'openai';
 import { validateEvaluateRequest } from '@/lib/utils/validation';
+import { rateLimit, RATE_LIMITS } from '@/lib/utils/rate-limit';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -30,6 +31,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      );
+    }
+
+    // Rate limit: 10 evaluations per minute per user
+    const rateLimitResult = rateLimit(user.id, RATE_LIMITS.evaluate);
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Rate limit exceeded. Please wait before submitting another evaluation.',
+          retryAfter: rateLimitResult.resetInSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(rateLimitResult.resetInSeconds),
+            'X-RateLimit-Limit': String(RATE_LIMITS.evaluate.limit),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': String(rateLimitResult.resetInSeconds),
+          },
+        }
       );
     }
 
