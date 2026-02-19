@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Button, Card, CardContent, Badge, Progress } from "@/components/ui";
+import { Button, Card, CardContent, Badge, Progress, useToast } from "@/components/ui";
 import { ALL_SEED_QUESTIONS } from "@/data/seed-questions";
 import {
   Sparkles,
@@ -17,6 +17,7 @@ import {
   Play,
   Send,
   Loader2,
+  RefreshCw,
 } from "lucide-react";
 
 // Dynamically import CodeMirror to avoid SSR issues
@@ -43,6 +44,8 @@ export default function QuestionPracticePage() {
     strengths: string[];
     improvements: string[];
   } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   if (!question) {
     return (
@@ -60,29 +63,42 @@ export default function QuestionPracticePage() {
   const handleSubmit = async () => {
     setEvaluating(true);
     setSubmitted(true);
+    setError(null);
 
-    // Simulate AI evaluation (in real app, this would call OpenAI)
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      // Simulate AI evaluation (in real app, this would call OpenAI)
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Mock evaluation
-    const mockScore = 0.75 + Math.random() * 0.2;
-    setEvaluation({
-      score: mockScore,
-      feedback:
-        "Good explanation of the core concepts. You demonstrated understanding of the key principles.",
-      strengths: [
-        "Clear explanation of the main concept",
-        "Good use of examples",
-        "Logical structure",
-      ],
-      improvements: [
-        "Could mention edge cases",
-        "Add more detail about performance implications",
-        "Consider discussing alternatives",
-      ],
-    });
+      // Mock evaluation
+      const mockScore = 0.75 + Math.random() * 0.2;
+      setEvaluation({
+        score: mockScore,
+        feedback:
+          "Good explanation of the core concepts. You demonstrated understanding of the key principles.",
+        strengths: [
+          "Clear explanation of the main concept",
+          "Good use of examples",
+          "Logical structure",
+        ],
+        improvements: [
+          "Could mention edge cases",
+          "Add more detail about performance implications",
+          "Consider discussing alternatives",
+        ],
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to evaluate your answer";
+      setError(message);
+      setSubmitted(false);
+      showToast("Unable to evaluate your answer. Please try again.", "error");
+    } finally {
+      setEvaluating(false);
+    }
+  };
 
-    setEvaluating(false);
+  const handleRetry = () => {
+    setError(null);
+    handleSubmit();
   };
 
   const goToNext = () => {
@@ -244,8 +260,26 @@ export default function QuestionPracticePage() {
               </CardContent>
             </Card>
 
+            {/* Error State */}
+            {error && (
+              <Card className="border-red-500/50 bg-red-500/10">
+                <CardContent className="p-4">
+                  <div className="flex items-start gap-3">
+                    <XCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm text-red-300 mb-3">{error}</p>
+                      <Button variant="outline" size="sm" onClick={handleRetry}>
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Try Again
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Submit / Evaluation */}
-            {!submitted ? (
+            {!submitted && !error ? (
               <Button
                 variant="gradient"
                 size="lg"

@@ -3,3 +3,4 @@ export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
 export { Badge, badgeVariants, type BadgeProps } from "./badge";
 export { Progress } from "./progress";
 export { Input, type InputProps } from "./input";
+export { ToastProvider, useToast } from "./toast";
