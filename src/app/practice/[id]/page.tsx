@@ -238,7 +238,7 @@ export default function QuestionPracticePage() {
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
                   placeholder="Explain your answer here..."
-                  className="w-full h-48 p-4 bg-transparent resize-none focus:outline-none text-sm text-zinc-100 placeholder:text-zinc-600"
+                  className="w-full h-48 p-4 bg-transparent resize-none focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-inset text-sm text-zinc-100 placeholder:text-zinc-500 transition-shadow duration-150"
                   disabled={submitted}
                 />
               </CardContent>

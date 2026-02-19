@@ -50,7 +50,7 @@ export default function HomePage() {
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
             Master Technical
-            <span className="block bg-gradient-to-r from-blue-500 via-violet-500 to-purple-500 bg-clip-text text-transparent">
+            <span className="block bg-gradient-to-r from-blue-400 via-violet-400 to-violet-500 bg-clip-text text-transparent">
               Interviews
             </span>
           </h1>
@@ -76,17 +76,17 @@ export default function HomePage() {
 
           {/* Stats */}
           <div className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto">
-            <div>
-              <div className="text-3xl font-bold text-white">500+</div>
-              <div className="text-sm text-zinc-500">Questions</div>
+            <div className="text-center">
+              <div className="text-4xl font-bold bg-gradient-to-r from-violet-400 to-violet-500 bg-clip-text text-transparent">500+</div>
+              <div className="text-xs font-medium tracking-wide uppercase text-zinc-400 mt-1">Questions</div>
             </div>
-            <div>
-              <div className="text-3xl font-bold text-white">10+</div>
-              <div className="text-sm text-zinc-500">Technologies</div>
+            <div className="text-center">
+              <div className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">10+</div>
+              <div className="text-xs font-medium tracking-wide uppercase text-zinc-400 mt-1">Technologies</div>
             </div>
-            <div>
-              <div className="text-3xl font-bold text-white">Free</div>
-              <div className="text-sm text-zinc-500">For You</div>
+            <div className="text-center">
+              <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">Free</div>
+              <div className="text-xs font-medium tracking-wide uppercase text-zinc-400 mt-1">Forever</div>
             </div>
           </div>
         </div>
