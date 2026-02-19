@@ -7,6 +7,31 @@ import { createBrowserClient } from '@supabase/ssr';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
+type FieldErrors = {
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+};
+
+function validateEmail(email: string): string | undefined {
+  if (!email) return 'Email is required';
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) return 'Please enter a valid email address';
+  return undefined;
+}
+
+function validatePassword(password: string): string | undefined {
+  if (!password) return 'Password is required';
+  if (password.length < 8) return 'Password must be at least 8 characters';
+  return undefined;
+}
+
+function validateConfirmPassword(password: string, confirmPassword: string): string | undefined {
+  if (!confirmPassword) return 'Please confirm your password';
+  if (password !== confirmPassword) return 'Passwords do not match';
+  return undefined;
+}
+
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,6 +39,8 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const router = useRouter();
 
   const supabase = createBrowserClient(
@@ -21,22 +48,42 @@ export default function SignupPage() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
+  const handleBlur = (field: keyof FieldErrors) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+
+    let error: string | undefined;
+    if (field === 'email') {
+      error = validateEmail(email);
+    } else if (field === 'password') {
+      error = validatePassword(password);
+      // Also revalidate confirmPassword if it was touched
+      if (touched.confirmPassword) {
+        setFieldErrors(prev => ({
+          ...prev,
+          confirmPassword: validateConfirmPassword(password, confirmPassword),
+        }));
+      }
+    } else if (field === 'confirmPassword') {
+      error = validateConfirmPassword(password, confirmPassword);
+    }
+
+    setFieldErrors(prev => ({ ...prev, [field]: error }));
+  };
+
   const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setMessage(null);
 
-    // Validate passwords match
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
-      return;
-    }
+    // Validate all fields
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+    const confirmError = validateConfirmPassword(password, confirmPassword);
 
-    // Validate password strength
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters');
+    if (emailError || passwordError || confirmError) {
+      setFieldErrors({ email: emailError, password: passwordError, confirmPassword: confirmError });
+      setTouched({ email: true, password: true, confirmPassword: true });
       setLoading(false);
       return;
     }
@@ -139,9 +186,15 @@ export default function SignupPage() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => handleBlur('email')}
                 required
-                className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                className={`w-full px-3 py-2 bg-zinc-900 border rounded-lg text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent ${
+                  touched.email && fieldErrors.email ? 'border-red-500' : 'border-zinc-800'
+                }`}
               />
+              {touched.email && fieldErrors.email && (
+                <p className="text-xs text-red-400">{fieldErrors.email}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -154,11 +207,18 @@ export default function SignupPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onBlur={() => handleBlur('password')}
                 required
                 minLength={8}
-                className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                className={`w-full px-3 py-2 bg-zinc-900 border rounded-lg text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent ${
+                  touched.password && fieldErrors.password ? 'border-red-500' : 'border-zinc-800'
+                }`}
               />
-              <p className="text-xs text-zinc-500">Must be at least 8 characters</p>
+              {touched.password && fieldErrors.password ? (
+                <p className="text-xs text-red-400">{fieldErrors.password}</p>
+              ) : (
+                <p className="text-xs text-zinc-500">Must be at least 8 characters</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -171,9 +231,15 @@ export default function SignupPage() {
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                onBlur={() => handleBlur('confirmPassword')}
                 required
-                className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+                className={`w-full px-3 py-2 bg-zinc-900 border rounded-lg text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent ${
+                  touched.confirmPassword && fieldErrors.confirmPassword ? 'border-red-500' : 'border-zinc-800'
+                }`}
               />
+              {touched.confirmPassword && fieldErrors.confirmPassword && (
+                <p className="text-xs text-red-400">{fieldErrors.confirmPassword}</p>
+              )}
             </div>
 
             <Button
