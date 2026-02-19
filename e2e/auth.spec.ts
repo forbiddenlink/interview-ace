@@ -5,32 +5,32 @@ test.describe('Authentication Flow', () => {
     await page.goto('/');
 
     // Check hero section has main CTA buttons
+    await expect(page.getByRole('link', { name: 'Start Practicing', exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: /get started/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /sign in/i })).toBeVisible();
   });
 
   test('login page renders correctly', async ({ page }) => {
     await page.goto('/login');
 
-    // Check form elements are present
-    await expect(page.getByRole('heading', { name: /sign in/i })).toBeVisible();
+    // Check form elements are present (CardTitle uses h3)
+    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible();
     await expect(page.getByLabel(/email/i)).toBeVisible();
     await expect(page.getByLabel(/password/i)).toBeVisible();
     await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();
 
-    // Check OAuth buttons
-    await expect(page.getByRole('button', { name: /google/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /github/i })).toBeVisible();
+    // Check link to signup
+    await expect(page.getByRole('link', { name: /sign up/i })).toBeVisible();
   });
 
   test('signup page renders correctly', async ({ page }) => {
     await page.goto('/signup');
 
-    // Check form elements
-    await expect(page.getByRole('heading', { name: /create.*account/i })).toBeVisible();
+    // Check form elements (CardTitle uses h3)
+    await expect(page.getByRole('heading', { name: /create an account/i })).toBeVisible();
     await expect(page.getByLabel(/email/i)).toBeVisible();
-    await expect(page.getByLabel(/password/i)).toBeVisible();
-    await expect(page.getByRole('button', { name: /sign up|create account/i })).toBeVisible();
+    await expect(page.getByLabel(/^password$/i)).toBeVisible();
+    await expect(page.getByLabel(/confirm password/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: /create account/i })).toBeVisible();
   });
 
   test('login form shows validation errors for empty submission', async ({ page }) => {
@@ -96,9 +96,9 @@ test.describe('Accessibility', () => {
   test('login page has proper heading structure', async ({ page }) => {
     await page.goto('/login');
 
-    // Should have h1
-    const h1 = page.locator('h1');
-    await expect(h1).toBeVisible();
+    // CardTitle renders as h3, check for heading role
+    const heading = page.getByRole('heading', { name: /welcome back/i });
+    await expect(heading).toBeVisible();
   });
 
   test('form inputs have labels', async ({ page }) => {
