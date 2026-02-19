@@ -4,3 +4,4 @@ export { Badge, badgeVariants, type BadgeProps } from "./badge";
 export { Progress } from "./progress";
 export { Input, type InputProps } from "./input";
 export { ToastProvider, useToast } from "./toast";
+export { Skeleton } from "./skeleton";
