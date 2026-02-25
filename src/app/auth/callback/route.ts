@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
           set(name: string, value: string, options: CookieOptions) {
             try {
               cookieStore.set({ name, value, ...options });
-            } catch (error) {
+            } catch {
               // The `set` method was called from a Server Component.
               // This can be ignored if you have middleware refreshing
               // user sessions.
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
           remove(name: string, options: CookieOptions) {
             try {
               cookieStore.set({ name, value: '', ...options });
-            } catch (error) {
+            } catch {
               // The `remove` method was called from a Server Component.
               // This can be ignored if you have middleware refreshing
               // user sessions.
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
 
     if (!error && data.user) {
       // Check if user profile exists, if not create one
-      const { data: profile, error: profileError } = await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', data.user.id)

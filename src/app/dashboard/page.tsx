@@ -193,7 +193,7 @@ export default async function DashboardPage() {
             <CardHeader>
               <CardTitle className="text-white">Your Technologies</CardTitle>
               <CardDescription className="text-zinc-400">
-                Skills you're focusing on
+                Skills you&apos;re focusing on
               </CardDescription>
             </CardHeader>
             <CardContent>

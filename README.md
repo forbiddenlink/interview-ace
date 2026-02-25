@@ -20,19 +20,23 @@ The anti-burnout technical interview prep platform. Practice coding, system desi
 ## Features
 
 ### Current (MVP)
-- **35+ Interview Questions** covering:
+- **50+ Interview Questions** covering:
   - React (hooks, Virtual DOM, Server Components)
   - JavaScript (event loop, closures, async)
   - TypeScript (generics, types, narrowing)
   - Next.js (App Router, data fetching)
   - Node.js (event loop, streams)
   - CSS (Flexbox, Grid, specificity)
-  - SQL/Databases (JOINs, indexing, SQL vs NoSQL)
-  - System Design (URL shortener)
+  - SQL/Databases (JOINs, indexing, sharding)
+  - System Design (URL shortener, rate limiter, collaboration)
+  - DSA (Two Sum, Valid Parentheses, LRU Cache)
   - Behavioral (STAR method, failure, leadership)
   - DevOps (Docker, Kubernetes, CI/CD)
-  - Security (XSS, JWT)
+  - Cloud (microservices, infrastructure)
+  - AI/ML (LLM integration, when to use ML)
+  - Security (XSS, JWT, CSRF protection)
   - Testing (pyramid, mocking)
+  - Performance (frontend, database optimization)
   - Accessibility (WCAG, ARIA)
   - Vue, Angular
 

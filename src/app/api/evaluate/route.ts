@@ -4,12 +4,22 @@ import { cookies } from 'next/headers';
 import OpenAI from 'openai';
 import { validateEvaluateRequest } from '@/lib/utils/validation';
 import { rateLimit, RATE_LIMITS } from '@/lib/utils/rate-limit';
+import type { Question } from '@/types/database';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function POST(request: NextRequest) {
+  // Check OpenAI API key is configured
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('OPENAI_API_KEY environment variable is not configured');
+    return NextResponse.json(
+      { error: 'Evaluation service is not configured' },
+      { status: 503 }
+    );
+  }
+
   try {
     // Verify user is authenticated
     const cookieStore = await cookies();
@@ -114,7 +124,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function buildEvaluationPrompt(type: string, question: any, rubric: any): string {
+function buildEvaluationPrompt(type: string, question: Question, rubric: Record<string, unknown>): string {
   const basePrompt = `You are an expert technical interviewer evaluating a candidate's response to an interview question.
 
 Question: ${question.title}

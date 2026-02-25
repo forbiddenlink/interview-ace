@@ -216,7 +216,7 @@ export default function ProfileSetupPage() {
                 className="w-full"
               />
               <p className="text-xs text-zinc-500">
-                We'll remind you when you've reached your daily limit to prevent burnout
+                We&apos;ll remind you when you&apos;ve reached your daily limit to prevent burnout
               </p>
             </div>
 

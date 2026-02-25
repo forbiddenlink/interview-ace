@@ -9,7 +9,6 @@ export type UserProgress = UserSkill;
 export type UserProgressInsert = Partial<UserSkill> & { user_id: string; skill_id: string };
 export type UserProgressUpdate = Partial<UserSkill>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function createServerSupabase() {
   const cookieStore = await cookies();
 

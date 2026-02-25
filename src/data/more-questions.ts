@@ -787,6 +787,590 @@ export const ANGULAR_QUESTIONS: SeedQuestion[] = [
   },
 ];
 
+// Data Structures & Algorithms Questions
+export const DSA_QUESTIONS: SeedQuestion[] = [
+  {
+    type: "coding",
+    format: "code",
+    title: "Two Sum Problem",
+    prompt: "Given an array of integers nums and an integer target, return indices of the two numbers that add up to target. Assume each input has exactly one solution and you may not use the same element twice.",
+    hints: [
+      "Consider using a hash map for O(n) time complexity",
+      "What information do you need to store while iterating?",
+    ],
+    solution: {
+      explanation: "Use a hash map to store numbers we've seen and their indices. For each number, check if (target - num) exists in the map.",
+      code: `function twoSum(nums: number[], target: number): number[] {
+  const seen = new Map<number, number>();
+
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+    if (seen.has(complement)) {
+      return [seen.get(complement)!, i];
+    }
+    seen.set(nums[i], i);
+  }
+
+  return []; // No solution found
+}`,
+      key_points: [
+        "Hash map provides O(1) lookup",
+        "Single pass through array - O(n) time",
+        "O(n) space for the hash map",
+        "Handle edge cases like no solution",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "beginner",
+    technologies: ["javascript", "typescript"],
+    company_tags: ["google", "amazon", "meta"],
+    topic_tags: ["arrays", "hash-map", "two-pointers"],
+    time_estimate_minutes: 15,
+    irt_difficulty: -0.5,
+    irt_discrimination: 1.4,
+    irt_guessing: 0.1,
+  },
+  {
+    type: "coding",
+    format: "code",
+    title: "Valid Parentheses",
+    prompt: "Given a string containing just '(', ')', '{', '}', '[' and ']', determine if the input string is valid. An input string is valid if open brackets are closed by the same type of brackets and in the correct order.",
+    hints: [
+      "Think about using a stack data structure",
+      "What happens when you encounter a closing bracket?",
+    ],
+    solution: {
+      explanation: "Use a stack to track opening brackets. When encountering a closing bracket, check if it matches the most recent opening bracket (top of stack).",
+      code: `function isValid(s: string): boolean {
+  const stack: string[] = [];
+  const pairs: Record<string, string> = {
+    ')': '(',
+    '}': '{',
+    ']': '['
+  };
+
+  for (const char of s) {
+    if (char in pairs) {
+      if (stack.pop() !== pairs[char]) return false;
+    } else {
+      stack.push(char);
+    }
+  }
+
+  return stack.length === 0;
+}`,
+      key_points: [
+        "Stack is LIFO - perfect for nested structures",
+        "Map closing to opening brackets",
+        "Check stack is empty at end",
+        "O(n) time and O(n) space",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "beginner",
+    technologies: ["javascript", "typescript"],
+    company_tags: ["amazon", "microsoft", "meta"],
+    topic_tags: ["stack", "strings", "matching"],
+    time_estimate_minutes: 12,
+    irt_difficulty: -0.3,
+    irt_discrimination: 1.3,
+    irt_guessing: 0.1,
+  },
+  {
+    type: "coding",
+    format: "code",
+    title: "Merge Two Sorted Lists",
+    prompt: "Merge two sorted linked lists and return it as a sorted list. The list should be made by splicing together the nodes of the first two lists.",
+    hints: [
+      "Consider using a dummy head node",
+      "Compare nodes from both lists one at a time",
+    ],
+    solution: {
+      explanation: "Use a dummy node to simplify edge cases. Compare heads of both lists, attach the smaller one, and advance that pointer. Continue until one list is exhausted.",
+      code: `function mergeTwoLists(l1: ListNode | null, l2: ListNode | null): ListNode | null {
+  const dummy = new ListNode(0);
+  let current = dummy;
+
+  while (l1 && l2) {
+    if (l1.val <= l2.val) {
+      current.next = l1;
+      l1 = l1.next;
+    } else {
+      current.next = l2;
+      l2 = l2.next;
+    }
+    current = current.next;
+  }
+
+  current.next = l1 || l2;
+  return dummy.next;
+}`,
+      key_points: [
+        "Dummy node avoids special-casing head",
+        "Two-pointer technique for merging",
+        "Attach remaining list at end",
+        "O(n+m) time, O(1) extra space",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "beginner",
+    technologies: ["javascript", "typescript"],
+    company_tags: ["amazon", "apple", "microsoft"],
+    topic_tags: ["linked-list", "two-pointers", "merge"],
+    time_estimate_minutes: 15,
+    irt_difficulty: -0.2,
+    irt_discrimination: 1.2,
+    irt_guessing: 0.05,
+  },
+  {
+    type: "coding",
+    format: "code",
+    title: "Binary Tree Level Order Traversal",
+    prompt: "Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).",
+    hints: [
+      "BFS is naturally level-by-level",
+      "Use a queue to process nodes in order",
+    ],
+    solution: {
+      explanation: "Use BFS with a queue. Process all nodes at the current level before moving to the next. Track level size to know when a level ends.",
+      code: `function levelOrder(root: TreeNode | null): number[][] {
+  if (!root) return [];
+
+  const result: number[][] = [];
+  const queue: TreeNode[] = [root];
+
+  while (queue.length > 0) {
+    const levelSize = queue.length;
+    const level: number[] = [];
+
+    for (let i = 0; i < levelSize; i++) {
+      const node = queue.shift()!;
+      level.push(node.val);
+
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+
+    result.push(level);
+  }
+
+  return result;
+}`,
+      key_points: [
+        "BFS using queue processes level-by-level",
+        "Track level size before processing",
+        "Add children to queue for next level",
+        "O(n) time and O(n) space",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "intermediate",
+    technologies: ["javascript", "typescript"],
+    company_tags: ["amazon", "meta", "google"],
+    topic_tags: ["binary-tree", "bfs", "queue"],
+    time_estimate_minutes: 18,
+    irt_difficulty: 0.2,
+    irt_discrimination: 1.3,
+    irt_guessing: 0.05,
+  },
+  {
+    type: "coding",
+    format: "code",
+    title: "LRU Cache Implementation",
+    prompt: "Design a data structure that follows the constraints of a Least Recently Used (LRU) cache. Implement get(key) and put(key, value) operations in O(1) time complexity.",
+    hints: [
+      "You need O(1) access by key - what data structure provides that?",
+      "You need to track recency order - what structure maintains order?",
+      "Consider combining a hash map with a doubly linked list",
+    ],
+    solution: {
+      explanation: "Combine a hash map (for O(1) key lookup) with a doubly linked list (for O(1) removal and insertion at ends). The list maintains usage order - most recent at head, least recent at tail.",
+      code: `class LRUCache {
+  private capacity: number;
+  private cache: Map<number, { value: number; node: DoublyLinkedNode }>;
+  private head: DoublyLinkedNode;
+  private tail: DoublyLinkedNode;
+
+  constructor(capacity: number) {
+    this.capacity = capacity;
+    this.cache = new Map();
+    this.head = new DoublyLinkedNode(0, 0);
+    this.tail = new DoublyLinkedNode(0, 0);
+    this.head.next = this.tail;
+    this.tail.prev = this.head;
+  }
+
+  get(key: number): number {
+    if (!this.cache.has(key)) return -1;
+    const { value, node } = this.cache.get(key)!;
+    this.moveToHead(node);
+    return value;
+  }
+
+  put(key: number, value: number): void {
+    if (this.cache.has(key)) {
+      const { node } = this.cache.get(key)!;
+      this.cache.set(key, { value, node });
+      this.moveToHead(node);
+    } else {
+      if (this.cache.size >= this.capacity) {
+        this.removeLRU();
+      }
+      const node = new DoublyLinkedNode(key, value);
+      this.addToHead(node);
+      this.cache.set(key, { value, node });
+    }
+  }
+}`,
+      key_points: [
+        "Hash map + doubly linked list combo",
+        "Dummy head/tail simplify edge cases",
+        "Move to head on access (mark as recent)",
+        "Remove from tail when over capacity",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "advanced",
+    technologies: ["javascript", "typescript"],
+    company_tags: ["amazon", "meta", "google", "netflix"],
+    topic_tags: ["design", "hash-map", "linked-list", "cache"],
+    time_estimate_minutes: 30,
+    irt_difficulty: 0.7,
+    irt_discrimination: 1.5,
+    irt_guessing: 0,
+  },
+];
+
+// Advanced System Design Questions
+export const SYSTEM_DESIGN_ADVANCED_QUESTIONS: SeedQuestion[] = [
+  {
+    type: "system_design",
+    format: "text",
+    title: "Design a Real-time Collaboration System",
+    prompt: "Design a real-time collaboration system like Google Docs where multiple users can edit the same document simultaneously. Focus on conflict resolution and consistency.",
+    hints: [
+      "Consider Operational Transformation (OT) or CRDTs",
+      "Think about how to handle offline edits",
+      "What happens when two users edit the same word?",
+    ],
+    solution: {
+      explanation: "Real-time collaboration requires handling concurrent edits without conflicts. Two main approaches: Operational Transformation (OT) transforms operations to maintain consistency, while CRDTs (Conflict-free Replicated Data Types) are designed to automatically merge without conflicts.",
+      key_points: [
+        "OT: Transform operations based on concurrent changes",
+        "CRDTs: Data structures that merge automatically",
+        "WebSockets for real-time sync",
+        "Version vectors for causality tracking",
+        "Eventual consistency model",
+        "Offline support with sync queue",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "expert",
+    technologies: ["general"],
+    company_tags: ["google", "notion", "figma"],
+    topic_tags: ["real-time", "distributed-systems", "collaboration"],
+    time_estimate_minutes: 45,
+    irt_difficulty: 1.2,
+    irt_discrimination: 1.6,
+    irt_guessing: 0,
+  },
+  {
+    type: "system_design",
+    format: "text",
+    title: "Design a Rate Limiter",
+    prompt: "Design a distributed rate limiter that can handle millions of requests per second across multiple servers. It should support different rate limiting strategies (fixed window, sliding window, token bucket).",
+    hints: [
+      "Consider distributed state management",
+      "Think about consistency vs availability tradeoffs",
+      "How do you handle clock skew between servers?",
+    ],
+    solution: {
+      explanation: "A distributed rate limiter needs to track request counts across multiple servers. Key considerations: where to store state (Redis is common), which algorithm to use, and how to handle race conditions.",
+      key_points: [
+        "Token bucket: Smooth rate, allows bursts",
+        "Sliding window: More accurate than fixed window",
+        "Redis for distributed state (atomic operations)",
+        "Local rate limiting with sync for performance",
+        "Eventual consistency is often acceptable",
+        "Consider client-side rate limiting too",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "advanced",
+    technologies: ["general"],
+    company_tags: ["stripe", "cloudflare", "aws"],
+    topic_tags: ["rate-limiting", "distributed-systems", "redis"],
+    time_estimate_minutes: 35,
+    irt_difficulty: 0.8,
+    irt_discrimination: 1.4,
+    irt_guessing: 0,
+  },
+  {
+    type: "system_design",
+    format: "text",
+    title: "Design a Notification System",
+    prompt: "Design a notification system that can send push notifications, emails, and SMS to millions of users. It should support user preferences, scheduling, and rate limiting.",
+    hints: [
+      "Think about message queues for reliability",
+      "Consider user preferences and quiet hours",
+      "How do you handle delivery failures?",
+    ],
+    solution: {
+      explanation: "A notification system needs to handle high throughput, multiple channels, user preferences, and reliable delivery. Use message queues for decoupling and reliability.",
+      key_points: [
+        "Message queue (Kafka/SQS) for reliability",
+        "Separate workers per notification channel",
+        "User preference service for opt-outs",
+        "Rate limiting per user and globally",
+        "Retry logic with exponential backoff",
+        "Analytics for delivery tracking",
+        "Template system for consistent formatting",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "advanced",
+    technologies: ["general"],
+    company_tags: ["meta", "uber", "airbnb"],
+    topic_tags: ["notifications", "message-queue", "distributed-systems"],
+    time_estimate_minutes: 35,
+    irt_difficulty: 0.6,
+    irt_discrimination: 1.3,
+    irt_guessing: 0,
+  },
+];
+
+// Cloud & Infrastructure Questions
+export const CLOUD_QUESTIONS: SeedQuestion[] = [
+  {
+    type: "conceptual",
+    format: "text",
+    title: "Microservices vs Monolith",
+    prompt: "Compare microservices architecture with monolithic architecture. When would you choose one over the other? What are the tradeoffs?",
+    hints: [
+      "Consider team size and organization",
+      "Think about deployment complexity",
+      "What about debugging distributed systems?",
+    ],
+    solution: {
+      explanation: "Monoliths are simpler to develop, deploy, and debug initially. Microservices offer better scalability and team autonomy but add operational complexity. The right choice depends on team size, scale requirements, and organizational structure.",
+      key_points: [
+        "Monolith: Simpler deployment, easier debugging",
+        "Microservices: Independent scaling, team autonomy",
+        "Start with monolith, extract services as needed",
+        "Microservices need: service discovery, distributed tracing, API gateway",
+        "Conway's Law: Architecture mirrors team structure",
+        "Network latency and failure handling in microservices",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "intermediate",
+    technologies: ["general"],
+    company_tags: ["amazon", "netflix", "uber"],
+    topic_tags: ["architecture", "microservices", "scalability"],
+    time_estimate_minutes: 15,
+    irt_difficulty: 0.3,
+    irt_discrimination: 1.2,
+    irt_guessing: 0,
+  },
+  {
+    type: "conceptual",
+    format: "text",
+    title: "Container Orchestration with Kubernetes",
+    prompt: "Explain Kubernetes core concepts: Pods, Services, Deployments, and ReplicaSets. How do they work together to run applications?",
+    hints: [
+      "Start with the smallest unit (Pod)",
+      "Think about how traffic reaches your application",
+      "How does Kubernetes handle scaling and updates?",
+    ],
+    solution: {
+      explanation: "Kubernetes organizes applications into Pods (smallest deployable units), manages them with Deployments (desired state), scales with ReplicaSets (multiple pod instances), and exposes them with Services (stable network endpoints).",
+      key_points: [
+        "Pod: One or more containers sharing network/storage",
+        "ReplicaSet: Ensures desired number of pod replicas",
+        "Deployment: Manages ReplicaSets, handles updates",
+        "Service: Stable endpoint, load balances across pods",
+        "Labels and selectors connect these resources",
+        "Declarative config: describe desired state, K8s reconciles",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "intermediate",
+    technologies: ["kubernetes", "docker"],
+    company_tags: ["google", "amazon", "microsoft"],
+    topic_tags: ["kubernetes", "containers", "orchestration"],
+    time_estimate_minutes: 15,
+    irt_difficulty: 0.4,
+    irt_discrimination: 1.3,
+    irt_guessing: 0,
+  },
+  {
+    type: "conceptual",
+    format: "text",
+    title: "Database Sharding Strategies",
+    prompt: "Explain database sharding. What are different sharding strategies and when would you use each? What challenges does sharding introduce?",
+    hints: [
+      "Think about how to distribute data across shards",
+      "Consider query patterns",
+      "What happens when you need to add more shards?",
+    ],
+    solution: {
+      explanation: "Sharding horizontally partitions data across multiple database instances. Key strategies: range-based (by ID ranges), hash-based (consistent hashing), and directory-based (lookup table).",
+      key_points: [
+        "Range sharding: Good for range queries, can cause hotspots",
+        "Hash sharding: Even distribution, harder range queries",
+        "Consistent hashing: Minimizes resharding on changes",
+        "Challenges: Cross-shard queries, transactions, joins",
+        "Shard key selection is critical",
+        "Consider: read replicas before sharding",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "advanced",
+    technologies: ["sql", "postgresql", "mongodb"],
+    company_tags: ["meta", "uber", "pinterest"],
+    topic_tags: ["database", "sharding", "scalability"],
+    time_estimate_minutes: 20,
+    irt_difficulty: 0.7,
+    irt_discrimination: 1.4,
+    irt_guessing: 0,
+  },
+];
+
+// AI/ML Interview Questions
+export const AI_ML_QUESTIONS: SeedQuestion[] = [
+  {
+    type: "conceptual",
+    format: "text",
+    title: "When to Use AI vs Traditional Programming",
+    prompt: "As an engineer, how do you decide when to use AI/ML solutions versus traditional rule-based programming? What are the tradeoffs?",
+    hints: [
+      "Consider data availability",
+      "Think about interpretability requirements",
+      "What about maintenance and debugging?",
+    ],
+    solution: {
+      explanation: "Use AI/ML when: patterns are complex and hard to define manually, you have sufficient quality data, and some uncertainty is acceptable. Use traditional programming when: rules are clear, interpretability is critical, or you lack training data.",
+      key_points: [
+        "ML needs: sufficient data, tolerance for errors",
+        "Rules work better: clear logic, compliance needs",
+        "ML is a black box - harder to debug",
+        "Consider: model maintenance and drift",
+        "Hybrid approaches often work best",
+        "Start simple, add ML complexity when needed",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "intermediate",
+    technologies: ["general"],
+    company_tags: ["google", "openai", "meta"],
+    topic_tags: ["ai", "machine-learning", "architecture"],
+    time_estimate_minutes: 12,
+    irt_difficulty: 0.3,
+    irt_discrimination: 1.1,
+    irt_guessing: 0,
+  },
+  {
+    type: "conceptual",
+    format: "text",
+    title: "Integrating LLMs in Production Applications",
+    prompt: "What are key considerations when integrating Large Language Models (LLMs) like GPT into production applications? Discuss reliability, cost, and safety.",
+    hints: [
+      "Think about rate limits and latency",
+      "Consider prompt injection attacks",
+      "How do you handle hallucinations?",
+    ],
+    solution: {
+      explanation: "LLM integration requires careful consideration of reliability (rate limits, fallbacks), cost (token optimization), latency (streaming, caching), and safety (prompt injection, content filtering, hallucination detection).",
+      key_points: [
+        "Implement retry logic and fallbacks",
+        "Cache common responses to reduce costs",
+        "Use streaming for better UX on long responses",
+        "Sanitize inputs to prevent prompt injection",
+        "Add guardrails for content safety",
+        "Validate outputs before using in critical paths",
+        "Monitor for hallucinations and quality degradation",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "intermediate",
+    technologies: ["general"],
+    company_tags: ["openai", "anthropic", "google"],
+    topic_tags: ["llm", "ai", "production", "safety"],
+    time_estimate_minutes: 15,
+    irt_difficulty: 0.4,
+    irt_discrimination: 1.2,
+    irt_guessing: 0,
+  },
+];
+
+// Performance & Optimization Questions
+export const PERFORMANCE_QUESTIONS: SeedQuestion[] = [
+  {
+    type: "conceptual",
+    format: "text",
+    title: "Frontend Performance Optimization",
+    prompt: "What are key strategies for optimizing frontend performance in a modern web application? Focus on both loading and runtime performance.",
+    hints: [
+      "Think about what blocks initial render",
+      "Consider bundle size and code splitting",
+      "What about runtime performance with React?",
+    ],
+    solution: {
+      explanation: "Frontend performance optimization involves reducing initial load time (code splitting, lazy loading, compression) and improving runtime performance (virtualization, memoization, avoiding re-renders).",
+      key_points: [
+        "Code splitting: Load only what's needed",
+        "Lazy loading: Defer non-critical resources",
+        "Image optimization: WebP, srcset, lazy loading",
+        "Bundle analysis: Identify large dependencies",
+        "React: useMemo, useCallback, React.memo",
+        "Virtualization for long lists",
+        "Core Web Vitals: LCP, FID, CLS",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "intermediate",
+    technologies: ["javascript", "react", "nextjs"],
+    company_tags: ["meta", "google", "vercel"],
+    topic_tags: ["performance", "optimization", "frontend"],
+    time_estimate_minutes: 15,
+    irt_difficulty: 0.3,
+    irt_discrimination: 1.2,
+    irt_guessing: 0,
+  },
+  {
+    type: "conceptual",
+    format: "text",
+    title: "Database Query Optimization",
+    prompt: "How do you identify and fix slow database queries? Walk through your approach to optimizing a slow query.",
+    hints: [
+      "Start with EXPLAIN/EXPLAIN ANALYZE",
+      "Think about indexing strategies",
+      "Consider query structure and N+1 problems",
+    ],
+    solution: {
+      explanation: "Database optimization starts with identifying slow queries (slow query log), analyzing execution plans (EXPLAIN), and applying fixes: adding indexes, restructuring queries, denormalization, or caching.",
+      key_points: [
+        "EXPLAIN ANALYZE shows actual execution",
+        "Index on WHERE, JOIN, ORDER BY columns",
+        "Avoid SELECT * - select only needed columns",
+        "N+1 problem: Use JOINs or batch loading",
+        "Composite indexes for multi-column queries",
+        "Consider denormalization for read-heavy workloads",
+        "Query caching for repeated expensive queries",
+      ],
+    },
+    rubric: CONCEPTUAL_RUBRIC,
+    difficulty: "intermediate",
+    technologies: ["sql", "postgresql"],
+    company_tags: ["amazon", "uber", "airbnb"],
+    topic_tags: ["database", "performance", "optimization"],
+    time_estimate_minutes: 15,
+    irt_difficulty: 0.4,
+    irt_discrimination: 1.3,
+    irt_guessing: 0,
+  },
+];
+
 export const ALL_ADDITIONAL_QUESTIONS = [
   ...TYPESCRIPT_QUESTIONS,
   ...NODEJS_QUESTIONS,
@@ -800,4 +1384,9 @@ export const ALL_ADDITIONAL_QUESTIONS = [
   ...ACCESSIBILITY_QUESTIONS,
   ...VUE_QUESTIONS,
   ...ANGULAR_QUESTIONS,
+  ...DSA_QUESTIONS,
+  ...SYSTEM_DESIGN_ADVANCED_QUESTIONS,
+  ...CLOUD_QUESTIONS,
+  ...AI_ML_QUESTIONS,
+  ...PERFORMANCE_QUESTIONS,
 ];

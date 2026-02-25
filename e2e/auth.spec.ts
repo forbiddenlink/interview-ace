@@ -5,17 +5,17 @@ test.describe('Authentication Flow', () => {
     await page.goto('/');
 
     // Check hero section has main CTA buttons
-    await expect(page.getByRole('link', { name: 'Start Practicing', exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: /get started/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Start Practicing', exact: true }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /learn more/i })).toBeVisible();
   });
 
   test('login page renders correctly', async ({ page }) => {
     await page.goto('/login');
 
-    // Check form elements are present (CardTitle uses h3)
+    // Check form elements are present
     await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible();
-    await expect(page.getByLabel(/email/i)).toBeVisible();
-    await expect(page.getByLabel(/password/i)).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /email/i })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /password/i })).toBeVisible();
     await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();
 
     // Check link to signup
@@ -25,11 +25,11 @@ test.describe('Authentication Flow', () => {
   test('signup page renders correctly', async ({ page }) => {
     await page.goto('/signup');
 
-    // Check form elements (CardTitle uses h3)
+    // Check form elements
     await expect(page.getByRole('heading', { name: /create an account/i })).toBeVisible();
-    await expect(page.getByLabel(/email/i)).toBeVisible();
-    await expect(page.getByLabel(/^password$/i)).toBeVisible();
-    await expect(page.getByLabel(/confirm password/i)).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /email/i })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /^password$/i })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /confirm password/i })).toBeVisible();
     await expect(page.getByRole('button', { name: /create account/i })).toBeVisible();
   });
 
@@ -41,7 +41,7 @@ test.describe('Authentication Flow', () => {
 
     // Browser native validation should prevent submission
     // Check that email input is required
-    const emailInput = page.getByLabel(/email/i);
+    const emailInput = page.getByRole('textbox', { name: /email/i });
     await expect(emailInput).toHaveAttribute('required', '');
   });
 
@@ -96,7 +96,7 @@ test.describe('Accessibility', () => {
   test('login page has proper heading structure', async ({ page }) => {
     await page.goto('/login');
 
-    // CardTitle renders as h3, check for heading role
+    // Check for heading role
     const heading = page.getByRole('heading', { name: /welcome back/i });
     await expect(heading).toBeVisible();
   });
@@ -105,11 +105,11 @@ test.describe('Accessibility', () => {
     await page.goto('/login');
 
     // Email input should have associated label
-    const emailInput = page.getByLabel(/email/i);
+    const emailInput = page.getByRole('textbox', { name: /email/i });
     await expect(emailInput).toBeVisible();
 
     // Password input should have associated label
-    const passwordInput = page.getByLabel(/password/i);
+    const passwordInput = page.getByRole('textbox', { name: /password/i });
     await expect(passwordInput).toBeVisible();
   });
 

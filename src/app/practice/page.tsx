@@ -2,8 +2,8 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Button, Card, CardContent, CardHeader, CardTitle, Badge } from "@/components/ui";
-import { TECHNOLOGIES, DOMAINS, JOB_ROLE_MAPPINGS } from "@/data/technologies";
+import { Button, Card, CardContent, Badge } from "@/components/ui";
+import { TECHNOLOGIES, JOB_ROLE_MAPPINGS } from "@/data/technologies";
 import { ALL_SEED_QUESTIONS } from "@/data/seed-questions";
 import type { Technology, TechDomain, DifficultyLevel } from "@/types/database";
 import {
@@ -16,7 +16,6 @@ import {
   Brain,
   Users,
   MessageSquare,
-  ArrowLeft,
   Search,
   Briefcase,
 } from "lucide-react";
@@ -312,7 +311,7 @@ export default function PracticePage() {
             {/* Questions Grid */}
             <div className="grid gap-4">
               {filteredQuestions.map((question, index) => (
-                <QuestionCard key={index} question={question} index={index} />
+                <QuestionCard key={question.title + index} question={question} />
               ))}
 
               {filteredQuestions.length === 0 && (
@@ -333,10 +332,8 @@ export default function PracticePage() {
 
 function QuestionCard({
   question,
-  index,
 }: {
   question: (typeof ALL_SEED_QUESTIONS)[0];
-  index: number;
 }) {
   const TypeIcon = {
     conceptual: MessageSquare,

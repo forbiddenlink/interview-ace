@@ -1,20 +1,18 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Button, Card, CardContent, Badge, Progress, useToast } from "@/components/ui";
+import { Button, Card, CardContent, Badge, useToast } from "@/components/ui";
 import { ALL_SEED_QUESTIONS } from "@/data/seed-questions";
 import {
-  Sparkles,
   ArrowLeft,
   Clock,
   Lightbulb,
   CheckCircle2,
   XCircle,
   ChevronRight,
-  Play,
   Send,
   Loader2,
   RefreshCw,
